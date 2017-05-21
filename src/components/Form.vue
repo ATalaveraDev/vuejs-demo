@@ -1,12 +1,12 @@
 <template>
     <div>
-        <form novalidate name="movie">
+        <form novalidate>
             <div class="row">
-                <div class="form-group col-lg-5">
-                    <input type="text" class="form-control" placeholder="Title" v-model="movie.title">
-                </div>
                 <div class="form-group col-lg-4">
                     <input type="text" class="form-control" placeholder="Status" v-model="movie.status">
+                </div>
+                <div class="form-group col-lg-5">
+                    <input type="text" class="form-control" placeholder="Title" v-model="movie.title">
                 </div>
                 <div class="form-group col-lg-3">
                     <button type="button" class="btn btn-danger" @click="addMovie">OK</button>
@@ -17,23 +17,19 @@
 </template>
 
 <script>
+    const helpers = require('../helpers').default;
+
     export default {
         data() {
             return {
-                movie: {
-                    title: '',
-                    status: 'Pending'
-                }
+                movie: helpers.movie()
             }
         },
         methods: {
             addMovie() {
-                this.$http.post('http://localhost:8081/movies', this.movie).then(response => {
+                this.$http.post(helpers.constants.endpoint, this.movie).then(response => {
                     this.$emit('movieAdded', response.data);
-                    this.movie = {
-                        title: '',
-                        status: 'Pending'
-                    };
+                    this.movie = helpers.movie()
                 });
             }
         }
